@@ -1,0 +1,104 @@
+<div class="main-content">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="card-title">Contact form</h4>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">fullname</th>
+            <th scope="col">email</th>
+            <th scope="col">number</th>
+            <th scope="col">subject</th>
+            <!-- <th scope="col">message</th> -->
+            <th scope="col">date d'envoi</th>
+            <th scope="col">action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let contact of contacts; index as i">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>
+              {{ contact.fullName }}
+            </td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.number }}</td>
+            <td>{{ contact.subject }}</td>
+            <!-- <td>{{ contact.message }}</td> -->
+
+            <td>{{ contact.createdAt | date: "dd/MMMM/yyyy hh:mm:ss" }}</td>
+
+            <td class="text-right">
+              <a
+                title="preview"
+                href="javascript:void(0)"
+                class="btn btn-info btn-link btn-icon btn-sm btn-round like"
+                (click)="onEdit(contact)"
+                (click)="open(preview)"
+              >
+                <i class="fa fa-eye"></i>
+              </a>
+
+              <a
+                title="delete contact "
+                href="javascript:void(0)"
+                class="btn btn-danger btn-link btn-icon btn-sm btn-round remove"
+                (click)="onDeleteshowSwal(contact._id)"
+                ><i class="fa fa-times"></i
+              ></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #preview let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">preview</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="col-md-9 ml-auto mr-auto">
+      <div>
+        fullName:
+        {{ selectedContact.fullName }}
+      </div>
+      <div>email:{{ selectedContact.email }}</div>
+      <div>number:{{ selectedContact.number }}</div>
+      <div>subject:{{ selectedContact.subject }}</div>
+      <div>message:{{ selectedContact.message }}</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-danger btn-round"
+      (click)="d('Cross click')"
+    >
+      <i class="nc-icon nc-simple-remove"></i>
+
+      cancel
+    </button>
+    <!-- <button type="submit" class="btn btn-primary btn-round">
+      <i class="fa fa-plus"></i>
+
+      save
+    </button> -->
+  </div>
+</ng-template>

@@ -1,0 +1,172 @@
+<div class="main-content">
+  <div class="col-md-10 mr-auto ml-auto">
+    <!--      Wizard container        -->
+    <div class="wizard-container">
+      <div class="card card-wizard" data-color="primary" id="wizardProfile">
+        <form action="" method="">
+          <!--        You can switch " data-color="primary" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+
+          <div class="card-user">
+            <div class="image">
+              <img src="./assets/img/bg/damir-bosnjak.jpg" alt="..." />
+            </div>
+            <div class="card-body">
+              <div class="author">
+                <div class="picture-container">
+                  <div class="picture">
+                    <img
+                      src="./assets/img/default-avatar.png"
+                      class="picture-src"
+                      id="wizardPicturePreview"
+                      title=""
+                    />
+                    <input type="file" id="wizard-picture" />
+                  </div>
+                  <h6 class="description">Choose Picture</h6>
+                </div>
+                <h5 class="title">{{ userDetails?.fullName }}</h5>
+                <h5 class="title">{{ userDetails?.role }}</h5>
+                <p class="description">{{ userDetails?.email }}</p>
+
+                <p
+                  class="description"
+                  *ngIf="userDetails?.passwordChangedAt != null"
+                >
+                  La dernière fois que vous avez changé votre mot de passe:{{
+                    userDetails?.passwordChangedAt
+                      | date: "dd/MMMM/yyyy hh:mm:ss"
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="card-footer">
+          <div class="buttons-with-margin">
+            <div class="col-md-3">
+              <!-- (click)="enable()" -->
+
+              <button
+                class="btn btn-primary btn-round btn-block mb-3"
+                (click)="open(content)"
+              >
+                Changer votre mot de passe
+              </button>
+              <!-- <i class="fa fa-plus"></i>  -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- wizard container -->
+
+    <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+          Changement de mot de passe
+        </h4>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="this.resetForm(UpForm)"
+          (click)="d('Cross click')"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <!-- Error message -->
+
+        <div class="text-danger" *ngIf="serverErrorMessages">
+          {{ serverErrorMessages }}
+        </div>
+      </div>
+      <form
+        class="form"
+        #UpForm="ngForm"
+        (ngSubmit)="UpForm.valid && onSubmit(UpForm)"
+      >
+        <input
+          type="hidden"
+          name="id"
+          #id="ngModel"
+          [(ngModel)]="this.model.id"
+          [value]="userDetails?._id"
+        />
+
+        <div class="modal-body">
+          <div
+            class="input-group"
+            [ngClass]="{ 'input-group-focus': focus1 === true }"
+          >
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="nc-icon nc-key-25"></i>
+              </span>
+            </div>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Mot de passe actuel"
+              (focus)="focus1 = true"
+              (blur)="focus1 = false"
+              #passwordCurrent="ngModel"
+              [(ngModel)]="model.passwordCurrent"
+              name="passwordCurrent"
+              required
+              [ngClass]="{
+                'invalid-textbox': UpForm.submitted && !passwordCurrent.valid
+              }"
+            />
+          </div>
+          <div
+            class="input-group"
+            [ngClass]="{ 'input-group-focus': focus2 === true }"
+          >
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="nc-icon nc-key-25"></i>
+              </span>
+            </div>
+            <input
+              type="password"
+              placeholder="Nouveau mot de passe"
+              class="form-control"
+              (focus)="focus2 = true"
+              (blur)="focus2 = false"
+              #password="ngModel"
+              [(ngModel)]="model.password"
+              name="password"
+              minlength="4"
+              required
+              [ngClass]="{
+                'invalid-textbox': UpForm.submitted && !password.valid
+              }"
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger btn-round"
+            (click)="this.resetForm(form)"
+            (click)="d('Cross click')"
+          >
+            <i class="nc-icon nc-simple-remove"></i>
+
+            cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary btn-round"
+            value="Sign Up"
+          >
+            <i class="fa fa-plus"></i>
+
+            save
+          </button>
+        </div>
+      </form>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,404 @@
+<div class="main-content">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="card-title">Team table</h4>
+        </div>
+        <div class="col-md-3 ml-auto">
+          <button class="btn btn-info btn-round" (click)="open(content)">
+            <i class="fa fa-plus"></i> ajouter team member
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">fullName</th>
+            <th scope="col">title</th>
+            <th scope="col">date de creation</th>
+            <!-- <th scope="col">social media</th>
+            <th scope="col">photo</th> -->
+            <th scope="col">action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let team of teams; index as i">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>
+              {{ team.fullName }}
+            </td>
+            <td>{{ team.title }}</td>
+            <td>{{ team.createdAt | date: "dd/MMMM/yyyy hh:mm:ss" }}</td>
+
+            <!-- <td>
+              <ul>
+                <li *ngIf="team.facebook != 'null'">
+                  {{ team.facebook }}
+                </li>
+                <br />
+                <li *ngIf="team.twitter != 'null'">{{ team.twitter }}</li>
+                <br />
+                <li *ngIf="team.email != 'null'">{{ team.email }}</li>
+                <br />
+                <li *ngIf="team.linkedin != 'null'">{{ team.linkedin }}</li>
+                <br />
+              </ul>
+            </td> -->
+
+            <!-- <td class="img-row">
+              <div class="img-wrapper">
+                <img
+                  [src]="team.imagePath"
+                  alt="team.fullname"
+                  class="img-raised"
+                />
+              </div>
+            </td> -->
+
+            <!-- <td>
+              <div class="img-container">
+                <img [src]="team.imagePath" alt="team.fullname" />
+              </div>
+            </td> -->
+
+            <td class="text-right">
+              <a
+                title="preview"
+                href="javascript:void(0)"
+                class="btn btn-info btn-link btn-icon btn-sm btn-round like"
+                (click)="onEdit(team)"
+                (click)="open(preview)"
+              >
+                <i class="fa fa-eye"></i>
+              </a>
+
+              <a
+                title="update value"
+                href="javascript:void(0)"
+                class="btn btn-warning btn-link btn-icon btn-sm btn-round edit"
+                (click)="open(content)"
+                (click)="onEdit(team)"
+                ><i class="fa fa-edit"></i
+              ></a>
+
+              <a
+                title="delete value "
+                href="javascript:void(0)"
+                class="btn btn-danger btn-link btn-icon btn-sm btn-round remove"
+                (click)="onDeleteshowSwal(team._id)"
+                ><i class="fa fa-times"></i
+              ></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Management de l'equipe</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="this.resetForm()"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" (submit)="onSubmit()">
+      <input type="hidden" name="_id" formControlName="_id" />
+
+      <div class="modal-body">
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-image"></i>
+            </span>
+          </div>
+          <input
+            formControlName="fullName"
+            type="text"
+            class="form-control"
+            placeholder="fullName"
+            (focus)="focus = true"
+            (blur)="focus = false"
+            name="fullname"
+          />
+        </div>
+        <span
+          class="text-danger"
+          *ngIf="
+            (teamFormControl.fullName.touched || submitted) &&
+            teamFormControl.fullName.errors?.required
+          "
+        >
+          Fullname is required
+        </span>
+        <div class="form-group">
+          <div
+            class="input-group"
+            [ngClass]="{ 'input-group-focus': focus1 === true }"
+          >
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="nc-icon nc-bullet-list-67"></i>
+              </span>
+            </div>
+            <input
+              formControlName="title"
+              type="text"
+              class="form-control"
+              placeholder="titre"
+              (focus)="focus1 = true"
+              (blur)="focus1 = false"
+              name="title"
+            />
+          </div>
+          <span
+            class="text-danger"
+            *ngIf="
+              (teamFormControl.title.touched || submitted) &&
+              teamFormControl.title.errors?.required
+            "
+          >
+            Title is required
+          </span>
+        </div>
+
+        <!-- 
+        picking file -->
+        <div>
+          <button
+            type="button"
+            class="btn btn-primary btn-round"
+            (click)="filePicker.click()"
+          >
+            pick Image
+          </button>
+          <input
+            formControlName="imagePath"
+            type="file"
+            #filePicker
+            (change)="handleFileInput($event.target.files)"
+          />
+
+          <!-- (change)="onfilepreview($event)" -->
+          <span
+            class="text-danger"
+            *ngIf="
+              (teamFormControl.imagePath.errors?.invalid || submitted) &&
+              teamFormControl.imagePath.errors?.required
+            "
+          >
+            image is required
+          </span>
+        </div>
+
+        <div
+          class="image-preview"
+          *ngIf="imgPreview !== '' && imgPreview && form.get('imagePath').valid"
+        >
+          <img [src]="imgPreview" [alt]="form.value.fullname" />
+        </div>
+
+        <!-- && form.get('imagePath').valid -->
+        <!-- photo uplode -->
+        <!-- <div class="">
+          <div 
+            class="fileinput fileinput-new text-center"
+            data-provides="fileinput"
+          >
+       
+            <div class="fileinput-preview fileinput-exists thumbnail"></div>
+            <div>
+              <span class="btn btn-rose btn-round btn-file">
+                <span class="fileinput-new">add image</span>
+                <span class="fileinput-exists">change</span>
+                <input
+                  type="file"
+                  class="form-control"
+                  #imagePath="ngModel"
+                  accept="image/*"
+                  ngModel
+                  [(ngModel)]="selectedTeam.imagePath"
+                  name="imagePath"
+                  (change)="handleFileInput($event.target.files)"
+                  required
+                  [ngClass]="{
+                    'invalid-textbox': teamForm.submitted && !imagePath.valid
+                  }"
+                />
+              </span>
+              <a
+                href="javascript:void(0)"
+                class="btn btn-danger btn-round fileinput-exists"
+                data-dismiss="fileinput"
+                ><i class="fa fa-times"></i> Remove</a
+              >
+            </div>
+          </div>
+        </div> -->
+        <!-- social media -->
+        <div class="">
+          <code> Social media not required</code>
+        </div>
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus3 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="lni lni-facebook-filled"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="facebook"
+            (focus)="focus3 = true"
+            (blur)="focus3 = false"
+            formControlName="facebook"
+          />
+        </div>
+
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus4 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="lni lni-twitter-filled"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="twitter"
+            (focus)="focus4 = true"
+            (blur)="focus4 = false"
+            formControlName="twitter"
+          />
+        </div>
+
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus5 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="lni lni-envelope"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="email"
+            (focus)="focus5 = true"
+            (blur)="focus5 = false"
+            formControlName="email"
+          />
+        </div>
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus6 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="lni lni-linkedin-original"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="linkedin"
+            (focus)="focus6 = true"
+            (blur)="focus6 = false"
+            formControlName="linkedin"
+          />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger btn-round"
+          (click)="this.resetForm()"
+          (click)="d('Cross click')"
+        >
+          <i class="nc-icon nc-simple-remove"></i>
+
+          cancel
+        </button>
+        <button type="submit" class="btn btn-primary btn-round">
+          <i class="fa fa-plus"></i>
+
+          save
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #preview let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">preview</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <section class="team-section">
+    <div class="col-md-9 ml-auto mr-auto">
+      <div class="single-team wow fadeInUp" data-wow-delay=".2s">
+        <div class="image">
+          <img [src]="selectedTeam.imagePath" alt="selectedTeam.title" />
+          <div class="overlay">
+            <ul class="socials">
+              <li *ngIf="selectedTeam.facebook != 'null'">
+                <a href="http://{{ selectedTeam.facebook }}" target="_blank">
+                  <i class="lni lni-facebook-filled"></i>
+                </a>
+              </li>
+              <li *ngIf="selectedTeam.twitter != 'null'">
+                <a href="http://{{ selectedTeam.twitter }}" target="_blank">
+                  <i class="lni lni-twitter-filled"></i>
+                </a>
+              </li>
+              <li *ngIf="selectedTeam.email != 'null'">
+                <a href="mailto:{{ selectedTeam.email }}" target="_top">
+                  <i class="lni lni-envelope"></i>
+                </a>
+              </li>
+              <li *ngIf="selectedTeam.linkedin != 'null'">
+                <a href="http://{{ selectedTeam.linkedin }}" target="_blank">
+                  <i class="lni lni-linkedin-original"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="info">
+          <h6>{{ selectedTeam.fullName }}</h6>
+          <p>{{ selectedTeam.title }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-template>

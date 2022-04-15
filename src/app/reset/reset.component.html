@@ -1,0 +1,99 @@
+<nav
+  class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent"
+>
+  <div class="container">
+    <div class="navbar-wrapper">
+      <!-- <a
+        class="navbar-brand"
+        routerLinkActive="active"
+        [routerLink]="['/dashboard']"
+        >Paper Dashboard PRO Angular</a
+      > -->
+      <a class="logoo" routerLinkActive="active" [routerLink]="['/home']"
+        ><img src="assets/landing/img/notitia/full.png"
+      /></a>
+    </div>
+  </div>
+</nav>
+<div class="wrapper wrapper-full-page">
+  <div
+    class="full-page lock-page section-image"
+    filter-color="black"
+    data-image="./assets/img/bg/bruno-abatti.jpg"
+  >
+    <!--   you can change the color of the filter page using: data-color="blue | green | orange | red | purple" -->
+    <div class="content">
+      <div class="container">
+        <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+          <div class="card card-lock text-center">
+            <div class="card-header">
+              <!-- <h3 class="header text-center">Recover password</h3> -->
+
+              <!-- <img src="./assets/img/faces/joe-gardner-2.jpg" alt="..." /> -->
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">Reset password</h4>
+              <form
+                class="form"
+                #resetForm="ngForm"
+                (ngSubmit)="resetForm.valid && onSubmit(resetForm)"
+              >
+                <div
+                  class="input-group"
+                  [ngClass]="{ 'input-group-focus': focus === true }"
+                >
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="nc-icon nc-email-85"></i>
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="First Name..."
+                    (focus)="focus = true"
+                    (blur)="focus = false"
+                    name="email"
+                    #email="ngModel"
+                    [(ngModel)]="model.email"
+                    placeholder="Email"
+                    [pattern]="emailRegex"
+                    required
+                    [ngClass]="{
+                      'invalid-textbox': resetForm.submitted && !email.valid
+                    }"
+                  />
+                </div>
+                <br />
+                <div class="form-group">
+                  <a
+                    class="btn btn-primary btn-round mb-3"
+                    type="submit"
+                    value="Sign In"
+                    (click)="onSubmit(resetForm)"
+                    >Submit</a
+                  >
+                </div>
+              </form>
+            </div>
+            <!-- <div class="card-footer"></div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer footer-black footer-white">
+      <div class="container">
+        <div class="row">
+          <div class="credits ml-auto">
+            <span class="copyright">
+              &copy; {{ test | date: "yyyy" }},
+              <a routerLinkActive="active" [routerLink]="['/home']"
+                >Notitia</a
+              ></span
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>

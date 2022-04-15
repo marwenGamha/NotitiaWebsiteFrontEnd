@@ -1,0 +1,242 @@
+<div class="main-content">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="card-title">Users table</h4>
+        </div>
+        <div class="col-md-3 ml-auto">
+          <button
+            class="btn btn-info btn-round"
+            (click)="open(content)"
+            (click)="enable()"
+          >
+            <i class="fa fa-plus"></i> Ajouter utilisateur
+          </button>
+        </div>
+
+        <!-- table -->
+
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date de creation</th>
+                <th scope="col" sortable="name">Prénom</th>
+                <th scope="col" sortable="area">Nom</th>
+                <th scope="col" sortable="population">role</th>
+
+                <th scope="col" sortable="population">email</th>
+                <th scope="col" sortable="population">action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of userService.users; index as i">
+                <th scope="row">{{ i + 1 }}</th>
+
+                <td>{{ user.creation_dt | date: "dd/MMMM/yyyy hh:mm:ss" }}</td>
+
+                <td>{{ user.fullName.split(" ")[0] }}</td>
+                <td>{{ user.fullName.split(" ")[1] }}</td>
+                <td>{{ user.role }}</td>
+
+                <td>{{ user.email }}</td>
+
+                <td class="text-right">
+                  <a
+                    title="reset user password"
+                    href="javascript:void(0)"
+                    class="btn btn-info btn-link btn-icon btn-sm like"
+                    (click)="onsendshowSwal(user.email)"
+                  >
+                    <i class="fa fa-envelope"></i>
+                  </a>
+                  <a
+                    title="update user data"
+                    href="javascript:void(0)"
+                    class="btn btn-warning btn-link btn-icon btn-sm edit"
+                    (click)="onEdit(user)"
+                    (click)="open(content)"
+                    (click)="disable()"
+                    ><i class="fa fa-edit"></i
+                  ></a>
+                  <a
+                    title="delete user "
+                    href="javascript:void(0)"
+                    class="btn btn-danger btn-link btn-icon btn-sm remove"
+                    (click)="onDeleteshowSwal(user._id)"
+                    ><i class="fa fa-times"></i
+                  ></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- end content-->
+      </div>
+      <!--  end card  -->
+    </div>
+    <!-- end col-md-12 -->
+  </div>
+  <!-- end row -->
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">User management</h4>
+
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="this.resetForm(form)"
+        (click)="d('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <!-- Error message -->
+
+      <div class="text-danger" *ngIf="serverErrorMessages">
+        {{ serverErrorMessages }}
+      </div>
+    </div>
+    <form
+      class="form"
+      #signUpForm="ngForm"
+      (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)"
+    >
+      <input
+        type="hidden"
+        name="_id"
+        #_id="ngModel"
+        [(ngModel)]="userService.selectedUser._id"
+      />
+
+      <div class="modal-body">
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-single-02"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Full name"
+            (focus)="focus = true"
+            (blur)="focus = false"
+            type="text"
+            #fullName="ngModel"
+            [(ngModel)]="userService.selectedUser.fullName"
+            name="fullName"
+            required
+            [ngClass]="{
+              'invalid-textbox': signUpForm.submitted && !fullName.valid
+            }"
+          />
+        </div>
+
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus1 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-email-85"></i>
+            </span>
+          </div>
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Email..."
+            (focus)="focus1 = true"
+            (blur)="focus1 = false"
+            #email="ngModel"
+            [(ngModel)]="userService.selectedUser.email"
+            name="email"
+            required
+            [pattern]="emailRegex"
+            [ngClass]="{
+              'invalid-textbox': signUpForm.submitted && !email.valid
+            }"
+          />
+        </div>
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus2 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-key-25"></i>
+            </span>
+          </div>
+          <input
+            type="password"
+            placeholder="Password"
+            [disabled]="toggleButton"
+            class="form-control"
+            (focus)="focus2 = true"
+            (blur)="focus2 = false"
+            #password="ngModel"
+            [(ngModel)]="userService.selectedUser.password"
+            name="password"
+            placeholder="Password"
+            minlength="4"
+            required
+            [ngClass]="{
+              'invalid-textbox': signUpForm.submitted && !password.valid
+            }"
+          />
+        </div>
+        <div
+          placeholder="select user role..."
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus3 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-minimal-down"></i>
+            </span>
+          </div>
+          <select
+            name="role"
+            #role="ngModel"
+            class="form-control"
+            title="Select Role"
+            [(ngModel)]="userService.selectedUser.role"
+            (focus)="focus3 = true"
+            (blur)="focus3 = false"
+          >
+            <option value="" selected disabled hidden>
+              Choose the user role
+            </option>
+
+            <option value="superAdmin">Super Admin</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger btn-round"
+          (click)="this.resetForm(form)"
+          (click)="d('Cross click')"
+        >
+          <i class="nc-icon nc-simple-remove"></i>
+
+          cancel
+        </button>
+        <button type="submit" class="btn btn-primary btn-round" value="Sign Up">
+          <i class="fa fa-plus"></i>
+
+          save
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</div>

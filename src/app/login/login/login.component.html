@@ -1,0 +1,129 @@
+<nav
+  class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent"
+>
+  <div class="container">
+    <div class="navbar-wrapper">
+      <a class="logoo" routerLinkActive="active" [routerLink]="['/home']"
+        ><img src="assets/landing/img/notitia/full.png"
+      /></a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrapper wrapper-full-page">
+  <div
+    class="full-page section-image"
+    filter-color="black"
+    data-image="./assets/img/bg/fabio-mangione.jpg"
+  >
+    <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
+    <div class="content">
+      <div class="container">
+        <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+          <form
+            class="form"
+            #signInForm="ngForm"
+            (ngSubmit)="signInForm.valid && onSubmit(signInForm)"
+          >
+            <div class="card card-login">
+              <div class="card-header">
+                <div class="card-header">
+                  <h3 class="header text-center">Se connecter</h3>
+                </div>
+                <!-- Error message -->
+                <div class="text-danger" *ngIf="serverErrorMessages">
+                  {{ serverErrorMessages }}
+                </div>
+              </div>
+              <div class="card-body">
+                <div
+                  class="input-group"
+                  [ngClass]="{ 'input-group-focus': focus === true }"
+                >
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="nc-icon nc-single-02"></i>
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="First Name..."
+                    (focus)="focus = true"
+                    (blur)="focus = false"
+                    name="email"
+                    #email="ngModel"
+                    [(ngModel)]="model.email"
+                    placeholder="Email"
+                    [pattern]="emailRegex"
+                    required
+                    [ngClass]="{
+                      'invalid-textbox': signInForm.submitted && !email.valid
+                    }"
+                  />
+                </div>
+                <div
+                  class="input-group"
+                  [ngClass]="{ 'input-group-focus': focus1 === true }"
+                >
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="nc-icon nc-key-25"></i>
+                    </span>
+                  </div>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    class="form-control"
+                    (focus)="focus1 = true"
+                    (blur)="focus1 = false"
+                    name="password"
+                    #password="ngModel"
+                    [(ngModel)]="model.password"
+                    placeholder="Password"
+                    required
+                    minlength="4"
+                    [ngClass]="{
+                      'invalid-textbox': signInForm.submitted && !password.valid
+                    }"
+                  />
+                </div>
+                <br />
+                <div class="form-group">
+                  <a
+                    type="submit"
+                    class="btn btn-primary btn-round btn-block mb-3"
+                    value="Sign In"
+                    (click)="onSubmit(signInForm)"
+                  >
+                    Connection
+                  </a>
+                </div>
+                <a
+                  type="button"
+                  classe="input-group"
+                  [routerLink]="['/forget-password']"
+                  >Mot de passe oublié</a
+                >
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <footer class="footer footer-black footer-white">
+      <div class="container">
+        <div class="row">
+          <div class="credits ml-auto">
+            <span class="copyright">
+              &copy; {{ test | date: "yyyy" }},
+              <a routerLinkActive="active" [routerLink]="['/home']"
+                >Notitia</a
+              ></span
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>

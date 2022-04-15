@@ -1,0 +1,74 @@
+<div class="main-content">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="card-title">Role table</h4>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="form" (submit)="onSubmit()">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">title</th>
+              <th scope="col">visibility</th>
+
+              <!-- <th scope="col">body</th>
+              <th scope="col">date de creation</th>
+              <th scope="col">icon</th>
+              <th scope="col">action</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of sidebar; index as i">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>
+                {{ item.title }}
+              </td>
+
+              <td>
+                <div class="input-group-prepend">
+                  <!-- formControlName=" {{ item.title }}" -->
+
+                  <select
+                    [formControlName]="item.title"
+                    name="role"
+                    class="form-control"
+                    title="Select the visibility"
+                    (focus)="focus = true"
+                    (blur)="focus = false"
+                  >
+                    <option value="" selected disabled hidden>
+                      Choose the visibility
+                    </option>
+
+                    <option value="true">visible</option>
+
+                    <option value="false">invisible</option>
+                  </select>
+
+                  <!-- [(ngModel)]="userService.selectedUser.role"
+              #role="ngModel" -->
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="col-md-3 ml-auto">
+          <button
+            type="submit"
+            class="btn btn-primary btn-round"
+            value="Sign Up"
+          >
+            <i class="fa fa-plus"></i>
+
+            save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

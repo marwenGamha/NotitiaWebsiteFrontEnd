@@ -1,0 +1,287 @@
+<div class="main-content">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="card-title">clients table</h4>
+        </div>
+        <div class="col-md-3 ml-auto">
+          <button class="btn btn-info btn-round" (click)="open(content)">
+            <i class="fa fa-plus"></i> ajouter client
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">fullName</th>
+            <th scope="col">title</th>
+            <th scope="col">body</th>
+            <th scope="col">date de creation</th>
+            <th scope="col">action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let client of clients; index as i">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>
+              {{ client.fullName }}
+            </td>
+            <td>{{ client.title }}</td>
+            <td>{{ client.body }}</td>
+
+            <td>{{ client.createdAt | date: "dd/MMMM/yyyy hh:mm:ss" }}</td>
+
+            <td class="text-right">
+              <div class="row">
+                <div class="">
+                  <a
+                    title="preview"
+                    href="javascript:void(0)"
+                    class="btn btn-info btn-link btn-icon btn-sm btn-round like"
+                    (click)="onEdit(client)"
+                    (click)="open(preview)"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </a>
+                </div>
+                <div class="">
+                  <a
+                    title="update value"
+                    href="javascript:void(0)"
+                    class="
+                      btn btn-warning btn-link btn-icon btn-sm btn-round
+                      edit
+                    "
+                    (click)="open(content)"
+                    (click)="onEdit(client)"
+                    ><i class="fa fa-edit"></i
+                  ></a>
+                </div>
+                <div class="">
+                  <a
+                    title="delete value "
+                    href="javascript:void(0)"
+                    class="
+                      btn btn-danger btn-link btn-icon btn-sm btn-round
+                      remove
+                    "
+                    (click)="onDeleteshowSwal(client._id)"
+                    ><i class="fa fa-times"></i
+                  ></a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Management des clients</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="this.resetForm()"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" (submit)="onSubmit()">
+      <input type="hidden" name="_id" formControlName="_id" />
+
+      <div class="modal-body">
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-single-02"></i>
+            </span>
+          </div>
+          <input
+            formControlName="fullName"
+            type="text"
+            class="form-control"
+            placeholder="fullName"
+            (focus)="focus = true"
+            (blur)="focus = false"
+            name="fullname"
+          />
+        </div>
+        <span
+          class="text-danger"
+          *ngIf="
+            (clientFormControl.fullName.touched || submitted) &&
+            clientFormControl.fullName.errors?.required
+          "
+        >
+          Fullname is required
+        </span>
+        <div class="form-group">
+          <div
+            class="input-group"
+            [ngClass]="{ 'input-group-focus': focus1 === true }"
+          >
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="nc-icon nc-bullet-list-67"></i>
+              </span>
+            </div>
+            <input
+              formControlName="title"
+              type="text"
+              class="form-control"
+              placeholder="titre"
+              (focus)="focus1 = true"
+              (blur)="focus1 = false"
+              name="title"
+            />
+          </div>
+          <span
+            class="text-danger"
+            *ngIf="
+              (clientFormControl.title.touched || submitted) &&
+              clientFormControl.title.errors?.required
+            "
+          >
+            Title is required
+          </span>
+        </div>
+
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus2 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-caps-small"></i>
+            </span>
+          </div>
+          <textarea
+            formControlName="body"
+            type="text"
+            class="form-control"
+            placeholder="body"
+            (focus)="focus2 = true"
+            (blur)="focus2 = false"
+            name="body"
+          ></textarea>
+        </div>
+        <span
+          class="text-danger"
+          *ngIf="
+            (clientFormControl.body.touched || submitted) &&
+            clientFormControl.body.errors?.required
+          "
+        >
+          body is required
+        </span>
+
+        <!-- 
+          picking file -->
+        <div>
+          <button
+            type="button"
+            class="btn btn-primary btn-round"
+            (click)="filePicker.click()"
+          >
+            pick Image
+          </button>
+          <input
+            formControlName="image"
+            type="file"
+            #filePicker
+            (change)="handleFileInput($event.target.files)"
+          />
+
+          <!-- (change)="onfilepreview($event)" -->
+          <span
+            class="text-danger"
+            *ngIf="
+              (clientFormControl.image.errors?.invalid || submitted) &&
+              clientFormControl.image.errors?.required
+            "
+          >
+            image is required
+          </span>
+        </div>
+
+        <div
+          class="image-preview"
+          *ngIf="imgPreview !== '' && imgPreview && form.get('image').valid"
+        >
+          <img [src]="imgPreview" [alt]="form.value.fullname" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger btn-round"
+          (click)="this.resetForm()"
+          (click)="d('Cross click')"
+        >
+          <i class="nc-icon nc-simple-remove"></i>
+
+          cancel
+        </button>
+        <button type="submit" class="btn btn-primary btn-round">
+          <i class="fa fa-plus"></i>
+
+          save
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #preview let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">preview</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <section id="testimonial" class="testimonial-section">
+    <div class="col-md-9 ml-auto mr-auto">
+      <div class="single-testimonial wow fadeInUp" data-wow-delay=".2s">
+        <div class="content-wrapper">
+          <div class="info">
+            <div class="image">
+              <img [src]="selectedClient.image" alt="selectedClient.fullName" />
+            </div>
+            <div class="text">
+              <h6>{{ selectedClient.fullName }}</h6>
+              <p>{{ selectedClient.title }}</p>
+            </div>
+          </div>
+          <div class="content">
+            <p>
+              {{ selectedClient.body }}
+            </p>
+            <div class="quote">
+              <i class="lni lni-quotation"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-template>

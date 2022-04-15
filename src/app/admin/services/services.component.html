@@ -1,0 +1,252 @@
+<div class="main-content">
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-3">
+          <h4 class="card-title">services table</h4>
+        </div>
+        <div class="col-md-3 ml-auto">
+          <button class="btn btn-info btn-round" (click)="open(content)">
+            <i class="fa fa-plus"></i> ajouter service
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">title</th>
+            <th scope="col">body</th>
+            <th scope="col">date de creation</th>
+            <th scope="col">icon</th>
+            <th scope="col">action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ser of this.serService.serr; index as i">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>
+              {{ ser.title }}
+            </td>
+            <td>{{ ser.body }}</td>
+            <td>{{ ser.createdAt | date: "dd/MMMM/yyyy hh:mm:ss" }}</td>
+            <td>
+              <i class="{{ ser.icon }}"></i>
+            </td>
+
+            <td class="text-right">
+              <div class="row">
+                <div class="col-md-6 ml-auto mr-auto">
+                  <a
+                    title="preview"
+                    href="javascript:void(0)"
+                    class="btn btn-info btn-link btn-icon btn-sm btn-round like"
+                    (click)="onEdit(ser)"
+                    (click)="open(preview)"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </a>
+
+                  <a
+                    title="update value"
+                    href="javascript:void(0)"
+                    class="
+                      btn btn-warning btn-link btn-icon btn-sm btn-round
+                      edit
+                    "
+                    (click)="onEdit(ser)"
+                    (click)="open(content)"
+                    ><i class="fa fa-edit"></i
+                  ></a>
+
+                  <a
+                    title="delete value "
+                    href="javascript:void(0)"
+                    class="
+                      btn btn-danger btn-link btn-icon btn-sm btn-round
+                      remove
+                    "
+                    (click)="onDeleteshowSwal(ser._id)"
+                    ><i class="fa fa-times"></i
+                  ></a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #preview let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">preview</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <section class="feature-section">
+    <div class="col-md-9 ml-auto mr-auto">
+      <div class="single-feature wow fadeInUp">
+        <div class="icon">
+          <i class="{{ selectedser.icon }}"></i>
+        </div>
+        <div class="content">
+          <h5>{{ selectedser.title }}</h5>
+          <p>
+            {{ selectedser.body }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-template>
+
+<!-- end of shit -->
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      Management des services de notre société
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="this.resetForm(form)"
+      (click)="d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form
+      class="form"
+      #valueForm="ngForm"
+      (ngSubmit)="valueForm.valid && onSubmit(valueForm)"
+    >
+      <input
+        type="hidden"
+        name="_id"
+        #_id="ngModel"
+        [(ngModel)]="selectedser._id"
+      />
+
+      <div class="modal-body">
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-image"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="icon"
+            (focus)="focus = true"
+            (blur)="focus = false"
+            type="text"
+            #icon="ngModel"
+            [(ngModel)]="selectedser.icon"
+            name="icon"
+            required
+            [ngClass]="{
+              'invalid-textbox': valueForm.submitted && !icon.valid
+            }"
+          />
+        </div>
+        <div class="">
+          <code
+            >il faut que icon suit cette form:<br />"lni lni-angular"faire le
+            choix avec ce
+            <a href="https://lineicons.com/icons/" target="_blank"
+              >lien</a
+            ></code
+          >
+        </div>
+
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus1 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-bullet-list-67"></i>
+            </span>
+          </div>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="titre de service"
+            (focus)="focus1 = true"
+            (blur)="focus1 = false"
+            type="text"
+            #title="ngModel"
+            [(ngModel)]="selectedser.title"
+            name="title"
+            required
+            [ngClass]="{
+              'invalid-textbox': valueForm.submitted && !title.valid
+            }"
+          />
+        </div>
+
+        <div
+          class="input-group"
+          [ngClass]="{ 'input-group-focus': focus2 === true }"
+        >
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="nc-icon nc-caps-small"></i>
+            </span>
+          </div>
+          <textarea
+            type="text"
+            class="form-control"
+            placeholder="corps du service"
+            (focus)="focus2 = true"
+            (blur)="focus2 = false"
+            type="text"
+            #body="ngModel"
+            [(ngModel)]="selectedser.body"
+            name="body"
+            required
+            [ngClass]="{
+              'invalid-textbox': valueForm.submitted && !body.valid
+            }"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger btn-round"
+          (click)="this.resetForm(form)"
+          (click)="d('Cross click')"
+        >
+          <i class="nc-icon nc-simple-remove"></i>
+
+          cancel
+        </button>
+        <button type="submit" class="btn btn-primary btn-round" value="Sign Up">
+          <i class="fa fa-plus"></i>
+
+          save
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
